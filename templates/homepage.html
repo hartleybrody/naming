@@ -6,6 +6,21 @@
         <title>Startup Naming</title>
 
         <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+
+        <style><!--
+            .true:before{
+                content:"\00b7";
+                color: green;
+                font-size:80px;
+                line-height:12px;
+            }
+            .false:before {
+                content:"\00b7";
+                color: red;
+                font-size:80px;
+                line-height:12px;
+            }
+        --></style>
         
         <!--SEO META INFO-->
         <meta name="description" content="Choosing a name for your startup is hard. We make it easy!">
@@ -30,7 +45,7 @@
             </div><!--.row-->
             <div class="row">
                 <div class="span8 offset2">
-                    <table id="results-table">
+                    <table id="results-table" class="table">
                         <tr></tr>
                     </table>
                 </div>
@@ -85,14 +100,24 @@
                     // mustache
                     var mustacheTemplate = "<tr>";
                     mustacheTemplate += "<td class='lead'><strong>{{site}}</strong></td>";
-                    mustacheTemplate += "<td class='{{fb}}'>Facebook is{{^fb}} not{{/fb}} available.</td>";
-                    mustacheTemplate += "<td class='{{tw}}'>Twitter is{{^tw}} not{{/tw}} available.</td>";
+                    mustacheTemplate += "<td class='{{com}}'>{{site}}.com</td>";
+                    mustacheTemplate += "<td class='{{other}}'>Other domains?</td>";
+                    mustacheTemplate += "<td class='{{fb}}'>facebook.com/{{site}}</td>";
+                    mustacheTemplate += "<td class='{{tw}}'>twitter.com/{{site}}</td>";
                     mustacheTemplate += "</tr>";
                     var mustacheVars = {
                         "site": item["option"],
                         "fb": item["facebook_is_available"],
                         "tw": item["twitter_is_available"],
+                        "com": item["com_is_available"],
                     };
+                    if (item["other_domains"].length == 0){
+                        mustacheVars["other"] = false;
+                    }
+                    else{
+                        mustacheVars["other"] = true;
+                        mustacheVars["other_domains"] = item["other_domains"];
+                    }
 
                     var html = Mustache.render(mustacheTemplate, mustacheVars);
                     $table.append(html);
