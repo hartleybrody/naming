@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Startup Naming</title>
 
-        <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css">
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
         
         <!--SEO META INFO-->
         <meta name="description" content="Choosing a name for your startup is hard. We make it easy!">
@@ -14,10 +14,91 @@
     <body>
         <div class="container">
             <div class="row">
-                <div class="span4 offset4">
-                    <h1>Hi there!</h1>
+                <div class="span8 offset2">
+                    <h1>Choosing A Project Name</h1>
+                    <p class="lead">
+                        Choosing a name for your startup is hard. This make it easy (well, eas<em>ier</em>)!
+                    </p>
+                </div>
+            </div><!--.row-->
+            <div class="row">
+                <div class="span8 offset2">
+                    <form class="form-search" method="get" action="">
+                        <input type="text" class="input-large search-query" id="search-box">
+                    </form>
+                </div>
+            </div><!--.row-->
+            <div class="row">
+                <div class="span8 offset2">
+                    <table id="results-table">
+                        <tr></tr>
+                    </table>
                 </div>
             </div><!--.row-->
         </div><!--.container-->
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/0.7.2/mustache.min.js"></script>
+
+        <script>
+            var searchValue = null;
+            $("#search-box").keyup( function(e){
+                typewatch(function () { // executed only 500 ms after the last keyup event.
+                    
+                    var $target = $(e.target);
+                    var value = $target.val();
+
+                    if (value == searchValue){
+                        // don't re-search if the value hasn't changed
+                        return false;
+                    }
+                    searchValue = value;
+                    console.log(value);
+                    $.ajax({
+                        url: "/api/",
+                        data: {
+                            "name": value
+                        }
+                    }).done(function(json) {
+                      render(json);
+                    });
+                }, 500);
+            });
+
+            // from http://stackoverflow.com/a/2219966/625840
+            var typewatch = (function(){
+                var timer = 0;
+                return function(callback, ms){
+                    clearTimeout (timer);
+                    timer = setTimeout(callback, ms);
+                }  
+            })();
+
+            function render(json){
+                var json = JSON.parse(json);
+                var $table = $("#results-table");
+
+                for (var i=0; i<json.length; i++){
+                    var item = json[i];
+
+                    // mustache
+                    var mustacheTemplate = "<tr>";
+                    mustacheTemplate += "<td class='lead'><strong>{{site}}</strong></td>";
+                    mustacheTemplate += "<td class='{{fb}}'>Facebook is{{^fb}} not{{/fb}} available.</td>";
+                    mustacheTemplate += "<td class='{{tw}}'>Twitter is{{^tw}} not{{/tw}} available.</td>";
+                    mustacheTemplate += "</tr>";
+                    var mustacheVars = {
+                        "site": item["option"],
+                        "fb": item["facebook_is_available"],
+                        "tw": item["twitter_is_available"],
+                    };
+
+                    var html = Mustache.render(mustacheTemplate, mustacheVars);
+                    $table.append(html);
+                }
+                //console.log(json);
+            }
+        </script>
     </body>
 </html>

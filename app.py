@@ -1,13 +1,13 @@
 import json, requests
 from BeautifulSoup import BeautifulSoup
-from flask import Flask, request, render_template
+from flask import Flask, request
 
 
 app = Flask(__name__)
 
 @app.route('/')
 def homepage():
-    return render_template('homepage.html')
+    return open('templates/homepage.html').read()
 
 @app.route('/api/')
 def api():
