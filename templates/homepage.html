@@ -79,15 +79,11 @@
         <script src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/0.7.2/mustache.min.js"></script>
 
         <script>
-            var searchValue = null;
             $("#search-form").submit( function(e){
 
                 var $target = $(e.target);
                 var value = $target.find('input[type=text]').val();
-                if (value == searchValue){
-                    return false;  // don't re-search if the value hasn't changed
-                }
-                searchValue = value;
+
                 console.log(value);
 
                 var prefixes = [], suffixes = [];
@@ -112,7 +108,7 @@
                     data: {
                         "name": value,
                         "prefixes": prefixes.join(),
-                        "suffixes": prefixes.join(),
+                        "suffixes": suffixes.join(),
                     }
                 }).done(function(json) {
                   render(json);
