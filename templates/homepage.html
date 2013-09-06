@@ -34,7 +34,7 @@
                 <div class="span8 offset2">
                     <h1>Choosing A Project Name</h1>
                     <p class="lead">
-                        Choosing a name for your startup is hard. This make it easy (well, eas<em>ier</em>)!
+                        Choosing a name for your project is hard. This make it easy (well, eas<em>ier</em>)!
                     </p>
                 </div>
             </div><!--.row-->
@@ -65,6 +65,15 @@
                     </form>
                 </div>
             </div><!--.row-->
+
+            <div class="row" id="progress-reporting-area">
+                <div class="span8 offset2">
+                    <div class="progress progress-striped active" id="progress-container">
+                        <div class="bar" style="width: 0px;" id="progress-bar"></div>
+                    </div>
+                </div>
+            </div><!--.row-->
+
             <div class="row">
                 <div class="span8 offset2">
                     <table id="results-table" class="table">
@@ -114,12 +123,40 @@
                   render(json);
                 });
 
+                beginProgress((prefixes.length+1) * (suffixes.length+1) * 2);
+
                 return false;
             });
+
+            function beginProgress(num_permutations){
+                $progress_container = $("#progress-container");
+                console.log($progress_container.width());
+                window.progress_step  = Math.floor($progress_container.width() / num_permutations);
+                console.log(" progress step is " + progress_step);
+
+                window.progress_interval = window.setInterval( function(){
+
+                    $progress_bar = $("#progress-bar");
+
+                    var current_width = parseInt($progress_bar.css("width").split("px")[0]);
+                    console.log("  1. current width " + current_width);
+
+                    var progress_step = window.progress_step;
+                    console.log("  2. moving width by " + progress_step);
+
+                    var new_width = current_width + progress_step;
+                    console.log("  3. setting new width to " + new_width);
+
+                    $progress_bar.css("width", new_width + "px");
+                }, 1000);
+            }
 
             function render(json){
                 var json = JSON.parse(json);
                 var $table = $("#results-table");
+
+                $progress_bar = $("#progress-bar");
+                $progress_bar.css("width", "100%");
 
                 for (var i=0; i<json.length; i++){
                     var item = json[i];
@@ -151,6 +188,8 @@
                     $table.append(html);
                 }
                 //console.log(json);
+                window.clearInterval(window.progress_interval);
+                $progress_bar.css("width", "0px");
             }
         </script>
     </body>
