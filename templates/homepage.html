@@ -13,12 +13,14 @@
                 color: green;
                 font-size:80px;
                 line-height:12px;
+                display:inline-block;
             }
             .false:before {
                 content:"\00b7";
                 color: red;
                 font-size:80px;
                 line-height:12px;
+                display:inline-block;
             }
         --></style>
         
@@ -38,8 +40,28 @@
             </div><!--.row-->
             <div class="row">
                 <div class="span8 offset2">
-                    <form class="form-search" method="get" action="">
-                        <input type="text" class="input-large search-query" id="search-box">
+                    <form class="form-search" method="get" action="/" id="search-form">
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    <p class="lead">Name</p>
+                                    <input type="text" class="input-large search-query" id="search-box" />
+                                </td>
+                                <td>
+                                    <p class="lead">Prefixes</p>
+                                    <label>Try <input type="checkbox" name="prefix" value="try" /></label>
+                                    <label>Get <input type="checkbox" name="prefix" value="get" /></label>
+                                </td>
+                                <td>
+                                    <p class="lead">Suffixes</p>
+                                    <label>App <input type="checkbox" name="suffix" value="app" /></label>
+                                    <label>Co <input type="checkbox" name="suffix" value="co" /></label>
+                                </td>
+                                <td style="padding-top:50px">
+                                    <input type="submit" class="btn" id="submit-button" value="search &rarr;" />
+                                </td>
+                            </tr>
+                        </table>
                     </form>
                 </div>
             </div><!--.row-->
@@ -58,37 +80,46 @@
 
         <script>
             var searchValue = null;
-            $("#search-box").keyup( function(e){
-                typewatch(function () { // executed only 500 ms after the last keyup event.
-                    
-                    var $target = $(e.target);
-                    var value = $target.val();
+            $("#search-form").submit( function(e){
 
-                    if (value == searchValue){
-                        // don't re-search if the value hasn't changed
-                        return false;
-                    }
-                    searchValue = value;
-                    console.log(value);
-                    $.ajax({
-                        url: "/api/",
-                        data: {
-                            "name": value
+                var $target = $(e.target);
+                var value = $target.find('input[type=text]').val();
+                if (value == searchValue){
+                    return false;  // don't re-search if the value hasn't changed
+                }
+                searchValue = value;
+                console.log(value);
+
+                var prefixes = [], suffixes = [];
+                var checkboxes = $target.find('input[type=checkbox]');
+                for (var i=0; i<checkboxes.length; i++){
+                    var $checkbox = $(checkboxes[i]);
+                    if ($checkbox.prop('checked')){
+                        if ($checkbox.attr("name") == "prefix"){
+                            prefixes.push($checkbox.attr("value"));
                         }
-                    }).done(function(json) {
-                      render(json);
-                    });
-                }, 500);
-            });
+                        else if ($checkbox.attr("name") == "suffix"){
+                            suffixes.push($checkbox.attr("value"));
+                        }
+                    }
+                }
 
-            // from http://stackoverflow.com/a/2219966/625840
-            var typewatch = (function(){
-                var timer = 0;
-                return function(callback, ms){
-                    clearTimeout (timer);
-                    timer = setTimeout(callback, ms);
-                }  
-            })();
+                console.log(prefixes);
+                console.log(suffixes);
+
+                $.ajax({
+                    url: "/api/",
+                    data: {
+                        "name": value,
+                        "prefixes": prefixes.join(),
+                        "suffixes": prefixes.join(),
+                    }
+                }).done(function(json) {
+                  render(json);
+                });
+
+                return false;
+            });
 
             function render(json){
                 var json = JSON.parse(json);
@@ -100,16 +131,17 @@
                     // mustache
                     var mustacheTemplate = "<tr>";
                     mustacheTemplate += "<td class='lead'><strong>{{site}}</strong></td>";
-                    mustacheTemplate += "<td class='{{com}}'>{{site}}.com</td>";
-                    mustacheTemplate += "<td class='{{other}}'>Other domains?</td>";
-                    mustacheTemplate += "<td class='{{fb}}'>facebook.com/{{site}}</td>";
-                    mustacheTemplate += "<td class='{{tw}}'>twitter.com/{{site}}</td>";
+                    mustacheTemplate += "<td class='{{com}}'>.com{{#com}} <a href='{{domainr}}'>&rarr;</a>{{/com}}</td>";
+                    mustacheTemplate += "<td class='{{other}}'>other domains{{#other}} <a href='{{domainr}}'>&rarr;</a>{{/other}}</td>";
+                    mustacheTemplate += "<td class='{{fb}}'>facebook</td>";
+                    mustacheTemplate += "<td class='{{tw}}'>twitter</td>";
                     mustacheTemplate += "</tr>";
                     var mustacheVars = {
                         "site": item["option"],
                         "fb": item["facebook_is_available"],
                         "tw": item["twitter_is_available"],
                         "com": item["com_is_available"],
+                        "domainr": "https://domai.nr/" + item["option"],
                     };
                     if (item["other_domains"].length == 0){
                         mustacheVars["other"] = false;

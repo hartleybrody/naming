@@ -16,8 +16,11 @@ def api():
     name = request.args.get('name')
     name = str(name)
 
+    prefixes = request.args.get('prefixes').split(",")
+    suffixes = request.args.get('prefixes').split(",")
+
     data = []
-    name_options = build_name_options(name)
+    name_options = build_name_options(name, prefixes, suffixes)
     for name_option in name_options:
 
         option_data = lookup_info(name_option)
@@ -29,11 +32,9 @@ def api():
     return (response, 200, resp_headers)
 
 
-def build_name_options(name):
+def build_name_options(name, prefixes, suffixes):
     """takes a single name and returns common variations on it"""
-    return [name]
-    prefixes = ["", "get", "try"]
-    suffixes = ["", "app", "co"]
+    # return [name]
 
     perms = []
     for p in prefixes:
@@ -74,8 +75,8 @@ def lookup_info(option):
         "com_is_available": com_is_available,
         "com_register": com_register,
         "other_domains": other_domains,
-        "twitter_is_available": requests.get("https://twitter.com/" + option).status_code == 404,
-        "facebook_is_available": requests.get("https://www.facebook.com/" + option).status_code == 404,
+        "twitter_is_available": requests.get("http://twitter.com/" + option).status_code == 404,
+        "facebook_is_available": requests.get("http://www.facebook.com/" + option).status_code == 404,
         # "google_results": scrape_google(option),
     }
 
