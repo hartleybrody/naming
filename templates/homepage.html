@@ -110,6 +110,8 @@
                 var $target = $(e.target);
                 var value = $target.find('input[type=text]').val();
 
+                $("#submit-button").addClass("disabled");
+
                 var prefixes = [], suffixes = [];
                 var checkboxes = $target.find('input[type=checkbox]');
                 for (var i=0; i<checkboxes.length; i++){
@@ -166,7 +168,9 @@
             function render(json){
                 var json = JSON.parse(json);
                 var $table = $("#results-table");
+                
                 $table.empty();
+                $("#submit-button").removeClass("disabled");
 
                 $progress_bar = $("#progress-bar");
                 $progress_bar.css("width", "100%");
