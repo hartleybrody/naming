@@ -37,9 +37,9 @@ def build_name_options(name, prefixes, suffixes):
     """takes a single name and returns common variations on it"""
     
     if "" not in prefixes:
-        prefixes.append("")
+        prefixes.insert(0, "")
     if "" not in suffixes:
-        suffixes.append("")
+        suffixes.insert(0, "")
 
     perms = []
     for p in prefixes:
