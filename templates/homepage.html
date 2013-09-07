@@ -49,13 +49,13 @@
                                 </td>
                                 <td>
                                     <p class="lead">Prefixes</p>
-                                    <label>Try <input type="checkbox" name="prefix" value="try" /></label>
-                                    <label>Get <input type="checkbox" name="prefix" value="get" /></label>
+                                    <label class="checkbox"><input type="checkbox" name="prefix" value="try" /> Try</label><br>
+                                    <label class="checkbox"><input type="checkbox" name="prefix" value="get" /> Get</label>
                                 </td>
                                 <td>
                                     <p class="lead">Suffixes</p>
-                                    <label>App <input type="checkbox" name="suffix" value="app" /></label>
-                                    <label>Co <input type="checkbox" name="suffix" value="co" /></label>
+                                    <label class="checkbox"><input type="checkbox" name="suffix" value="app" /> App</label><br>
+                                    <label class="checkbox"><input type="checkbox" name="suffix" value="co" /> Co</label>
                                 </td>
                                 <td style="padding-top:50px">
                                     <input type="submit" class="btn" id="submit-button" value="search &rarr;" />
@@ -93,8 +93,6 @@
                 var $target = $(e.target);
                 var value = $target.find('input[type=text]').val();
 
-                console.log(value);
-
                 var prefixes = [], suffixes = [];
                 var checkboxes = $target.find('input[type=checkbox]');
                 for (var i=0; i<checkboxes.length; i++){
@@ -108,9 +106,6 @@
                         }
                     }
                 }
-
-                console.log(prefixes);
-                console.log(suffixes);
 
                 $.ajax({
                     url: "/api/",
@@ -154,6 +149,7 @@
             function render(json){
                 var json = JSON.parse(json);
                 var $table = $("#results-table");
+                $table.empty();
 
                 $progress_bar = $("#progress-bar");
                 $progress_bar.css("width", "100%");
