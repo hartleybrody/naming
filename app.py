@@ -22,8 +22,8 @@ def api():
     data = []
     name_options = build_name_options(name, prefixes, suffixes)
     http_session = requests.Session()
-    for name_option in name_options:
 
+    for name_option in name_options:
         option_data = lookup_info(name_option, http_session)
         option_data["option"] = name_option
         data.append(option_data)
@@ -82,42 +82,6 @@ def lookup_info(option, session):
     data["facebook_is_available"] = session.get("http://www.facebook.com/" + option).status_code == 404
 
     return data
-
-
-def scrape_google(keyword):
-
-    url = "http://www.google.com/search?q={term}".format(
-        term=keyword.strip().replace(" ", "+"),
-    )
-
-    # spoof some headers
-    headers = {
-        "user-agent": "Naming Bot",
-        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "accept-charset": "utf-8",
-        "accept-encoding": "gzip,deflate,sdch",
-        "accept-language": "en-US,en",
-    }
-
-    r = requests.get(url, headers=headers)
-    soup = BeautifulSoup(r.text)
-
-    search_results = soup.findAll("li", "g")
-    results = []
-    for search_result in search_results:
-
-        try:
-            anchor = search_result.find("h3", "r").find("a")
-            results.append({
-                "link": anchor.get("href", ""),
-                "title": anchor.renderContents(),
-                "desc": search_result.find("span", "st").renderContents(),
-                "disp_url": search_result.find("cite").renderContents()
-            })
-        except:
-            continue
-
-    return results
 
 
 if __name__ == '__main__':
