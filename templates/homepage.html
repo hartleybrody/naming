@@ -147,6 +147,13 @@
                     }
                 }).done(function(json) {
                   render(json);
+                }).fail(function(json) {
+                  alert("Our backend timed out.. there might be too many users on the site. Try removing some prefixes or suffixes and searching again");
+
+                    $("#submit-button").removeClass("disabled");
+
+                    window.clearInterval(window.progress_interval);
+                    $progress_bar = $("#progress-bar").css("width", "0%");
                 });
 
                 beginProgress((prefixes.length+1) * (suffixes.length+1) * 2);
