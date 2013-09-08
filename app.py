@@ -78,8 +78,8 @@ def lookup_info(option, session):
         "com_register": com_register,
         "other_domains": other_domains,
     }
-    data["twitter_is_available"] = session.get("http://twitter.com/" + option).status_code == 404
-    data["facebook_is_available"] = session.get("http://www.facebook.com/" + option).status_code == 404
+    data["twitter_is_available"] = session.get("http://twitter.com/" + option.replace(" ", "")).status_code == 404
+    data["facebook_is_available"] = session.get("http://www.facebook.com/" + option.replace(" ", "")).status_code == 404
 
     return data
 
