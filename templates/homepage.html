@@ -38,37 +38,58 @@
                     </p>
                 </div>
             </div><!--.row-->
+
+        <form class="form-search" method="get" action="/" id="search-form">
             <div class="row">
                 <div class="span8 offset2">
-                    <form class="form-search" method="get" action="/" id="search-form">
-                        <table class="table">
-                            <tr>
-                                <td>
-                                    <p class="lead">Base Name</p>
-                                    <input type="text" class="input-large search-query" id="search-box" placeholder="Choose a base name..." />
-                                    <hr />
-                                    <p style="font-size:0.8em; color: #888">
-                                        Choose a base name for your project, then add potential<br> prefixes and suffixes. We'll tell you what's available.
-                                    </p>
-                                </td>
-                                <td>
-                                    <p class="lead">Prefixes</p>
-                                    <label class="checkbox"><input type="checkbox" name="prefix" value="try" /> Try</label><br>
-                                    <label class="checkbox"><input type="checkbox" name="prefix" value="get" /> Get</label><br>
-                                    <label class="checkbox"><input type="checkbox" name="prefix" value="use" /> Use</label><br>
-                                    <label class="checkbox"><input type="checkbox" name="prefix" value="buy" /> Buy</label>
-                                </td>
-                                <td>
-                                    <p class="lead">Suffixes</p>
-                                    <label class="checkbox"><input type="checkbox" name="suffix" value="app" /> App</label><br>
-                                    <label class="checkbox"><input type="checkbox" name="suffix" value="co" /> Co</label>
-                                </td>
-                                <td style="vertical-align:bottom">
-                                    <input type="submit" class="btn btn-primary btn-large" id="submit-button" value="search &rarr;" />
-                                </td>
-                            </tr>
-                        </table>
-                    </form>
+                    <div class="row">
+                        <div class="span4">
+                            <p class="lead">Base Name</p>
+                            <input type="text" class="input-large search-query" id="search-box" placeholder="Choose a base name..." />
+                        </div>
+                        <div class="span2">
+                            <p class="lead">Prefixes</p>
+                            <label class="checkbox"><input type="checkbox" name="prefix" value="try" /> Try</label><br>
+                            <label class="checkbox"><input type="checkbox" name="prefix" value="get" /> Get</label><br>
+                            <label class="checkbox">
+                                <input type="checkbox" name="prefix" value="" id="prefix-open"/>
+                                <input type="text" class="input-small open" data-part="prefix"/>
+                            </label>
+                        </div>
+                        <div class="span2">
+                            <p class="lead">Suffixes</p>
+                            <label class="checkbox"><input type="checkbox" name="suffix" value="app" /> App</label><br>
+                            <label class="checkbox"><input type="checkbox" name="suffix" value="co" /> Co</label><br>
+                            <label class="checkbox">
+                                <input type="checkbox" name="suffix" value="" id="suffix-open" />
+                                <input type="text" class="input-small open" data-part="suffix" />
+                            </label>
+                        </div>
+                    </div> <!-- nested .row-->
+                </div>
+            </div><!--.row-->
+
+            <div class="row">
+                <div class="span8 offset2">
+                    <hr />
+                </div>
+            </div><!--.row-->
+
+            <div class="row" id="progress-reporting-area">
+                <div class="span6 offset2">
+                    <p class="muted lead">
+                        Choose a base name for your project, then add potential prefixes and suffixes. We'll tell you what's available.
+                    </p>
+                </div>
+                <div class="span2">
+                    <input type="submit" class="btn btn-primary btn-large" id="submit-button" value="search &rarr;" />
+                </div>
+            </div><!--.row-->
+        </form>
+
+            <div class="row">
+                <div class="span8 offset2">
+                    <hr />
                 </div>
             </div><!--.row-->
 
@@ -117,6 +138,13 @@
         <script src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/0.7.2/mustache.min.js"></script>
 
         <script>
+            $(".open").keyup( function(e){
+                var $target = $(e.target);
+                var part = $target.attr("data-part");
+
+                $("#"+part+"-open").val($target.val());
+            });
+
             $("#search-form").submit( function(e){
 
                 var $target = $(e.target);
