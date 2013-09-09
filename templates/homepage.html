@@ -191,22 +191,22 @@
 
             function beginProgress(num_permutations){
                 $progress_container = $("#progress-container");
-                console.log($progress_container.width());
+                //console.log($progress_container.width());
                 window.progress_step  = Math.floor($progress_container.width() / num_permutations);
-                console.log(" progress step is " + progress_step);
+                //console.log(" progress step is " + progress_step);
 
                 window.progress_interval = window.setInterval( function(){
 
                     $progress_bar = $("#progress-bar");
 
                     var current_width = parseInt($progress_bar.css("width").split("px")[0]);
-                    console.log("  1. current width " + current_width);
+                    //console.log("  1. current width " + current_width);
 
                     var progress_step = window.progress_step;
-                    console.log("  2. moving width by " + progress_step);
+                    //console.log("  2. moving width by " + progress_step);
 
                     var new_width = current_width + progress_step;
-                    console.log("  3. setting new width to " + new_width);
+                    //console.log("  3. setting new width to " + new_width);
 
                     $progress_bar.css("width", new_width + "px");
                 }, 1000);
