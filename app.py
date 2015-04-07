@@ -57,7 +57,7 @@ def lookup_info(option, session):
     - USPTO
     """
 
-    domainr_response = session.get("https://api.domainr.com/v1/api/json/search?client_id=naming_hartleybrody&q=" + option).json()
+    domainr_response = session.get("https://api.domainr.com/v1/json/search?client_id=naming_hartleybrody&q=" + option).json()
     other_domains,  com_is_available, com_register = [], None, ""
     for result in domainr_response.get("results", []):
         if result.get("path") != "":
